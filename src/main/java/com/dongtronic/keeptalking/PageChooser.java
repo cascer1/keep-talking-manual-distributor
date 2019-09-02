@@ -1,9 +1,6 @@
 package com.dongtronic.keeptalking;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Random;
+import java.util.*;
 
 public class PageChooser {
     private int playerCount;
@@ -11,6 +8,7 @@ public class PageChooser {
     private String seedString = "";
     private Long seed = 0L;
     private HashMap<Integer, ArrayList<Integer>> result;
+    private Random playerRandom = new Random();
 
     public PageChooser(int playerCount, int pages, String seedString) {
         this.playerCount = playerCount;
@@ -20,7 +18,7 @@ public class PageChooser {
 
     public static void main(String[] args) {
         PageChooser chooser = new PageChooser(4, 23, "Hello, world!");
-        HashMap result = chooser.choose();
+        Map result = chooser.choose();
         chooser.printResult();
     }
 
@@ -38,7 +36,7 @@ public class PageChooser {
         this.seed = result;
     }
 
-    public HashMap<Integer, ArrayList<Integer>> choose() {
+    public Map<Integer, ArrayList<Integer>> choose() {
         ArrayList<Integer> usedPages = new ArrayList<>();
         calculateSeed();
         Random random = new Random(seed);
@@ -63,11 +61,8 @@ public class PageChooser {
             player = incrementPlayer(player, playerCount);
         }
 
-        usedPages.sort(Comparator.comparingInt(value -> value));
-
         result = players;
-
-        return players;
+        return Collections.unmodifiableMap(players);
     }
 
     private int incrementPlayer(int current, int total) {
@@ -77,6 +72,11 @@ public class PageChooser {
         }
 
         return next;
+    }
+
+    // in the future we may add support for giving each player a random amount of pages
+    private int incrementPlayerRandom(int current, int total) {
+        return playerRandom.nextInt(total) + 1;
     }
 
     public void printResult() {
