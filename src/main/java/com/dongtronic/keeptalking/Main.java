@@ -22,6 +22,8 @@ public class Main {
     private static WindowBasedTextGUI textGUI;
     private static TextBox manualPages;
     private static TextBox introPages;
+    private static CheckBox skipIntroPages;
+    private static CheckBox randomPlayers;
     private static Pattern shortNumberPattern = Pattern.compile("[0-9]{1,2}");
     private static Pattern longNumberPattern = Pattern.compile("[0-9]{1,3}");
 
@@ -95,14 +97,7 @@ public class Main {
             contentPanel.addComponent(manualVersionComboBox);
 
             /*
-             * Line 6 (Generate button)
-             */
-            contentPanel.addComponent(new EmptySpace().setLayoutData(GridLayout.createHorizontallyFilledLayoutData(1)));
-            contentPanel.addComponent(new Button("Generate", Main::generate)
-                    .setLayoutData(GridLayout.createLayoutData(GridLayout.Alignment.END, GridLayout.Alignment.CENTER)));
-
-            /*
-             * Line 7 (Empty)
+             * Line 6 (Empty)
              */
             contentPanel.addComponent(
                     new EmptySpace()
@@ -110,7 +105,30 @@ public class Main {
                                     GridLayout.createHorizontallyFilledLayoutData(2)));
 
             /*
-             * Line 8 (Separator)
+             * Line 7 (Misc)
+             */
+            skipIntroPages = new CheckBox().setLabel("Skip intro pages").setChecked(true);
+            randomPlayers = new CheckBox().setLabel("Uneven page distribution");
+            contentPanel.addComponent(skipIntroPages);
+            contentPanel.addComponent(randomPlayers);
+
+            /*
+             * Line 8 (Generate button)
+             */
+            contentPanel.addComponent(new EmptySpace().setLayoutData(GridLayout.createHorizontallyFilledLayoutData(1)));
+            contentPanel.addComponent(new Button("Generate", Main::generate)
+                    .setLayoutData(GridLayout.createLayoutData(GridLayout.Alignment.END, GridLayout.Alignment.CENTER)));
+
+            /*
+             * Line 9 (Empty)
+             */
+            contentPanel.addComponent(
+                    new EmptySpace()
+                            .setLayoutData(
+                                    GridLayout.createHorizontallyFilledLayoutData(2)));
+
+            /*
+             * Line 10 (Separator)
              */
             contentPanel.addComponent(
                     new Separator(Direction.HORIZONTAL)
@@ -118,7 +136,7 @@ public class Main {
                                     GridLayout.createHorizontallyFilledLayoutData(2)));
 
             /*
-             * Line 9 (Close button)
+             * Line 11 (Close button)
              */
             contentPanel.addComponent(
                     new Button("Close", window::close).setLayoutData(
@@ -172,12 +190,14 @@ public class Main {
             ManualVersion version = ManualVersion.fromName(versionName);
             assert version != null;
 
-            PageChooser chooser = new PageChooser(playerCount, version.getPages(), password);
+            PageChooser chooser = new PageChooser(playerCount, version.getPages(), version.getIntroPages(), randomPlayers.isChecked(), skipIntroPages.isChecked(), password);
 
             if (version == ManualVersion.MANUAL) {
                 customManual();
                 int pageCount = Integer.parseInt(manualPages.getText());
+                int introPageCount = Integer.parseInt(introPages.getText());
                 chooser.setPages(pageCount);
+                chooser.setIntroPages(introPageCount);
             }
 
             Map<Integer, ArrayList<Integer>> result = chooser.choose();

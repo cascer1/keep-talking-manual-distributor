@@ -2,10 +2,10 @@ package com.dongtronic.keeptalking
 
 import java.util.*
 
-class PageChooser(var playerCount: Int = 0, var pages: Int = 0, var seedString: String = "") {
+class PageChooser(var playerCount: Int = 0, var pages: Int = 0, var introPages: Int = 0, var random: Boolean = false, var skipIntroPages: Boolean = true, var seedString: String = "") {
     private var seed: Long? = 0L
     private var result: HashMap<Int, ArrayList<Int>>? = null
-    private val playerRandom = Random()
+    private var playerRandom: Random = Random()
 
     /**
      * Turn the seed String into a Long so it can be used in Random object creation
@@ -25,6 +25,7 @@ class PageChooser(var playerCount: Int = 0, var pages: Int = 0, var seedString: 
         val usedPages = ArrayList<Int>()
         calculateSeed()
         val random = Random(seed!!)
+        playerRandom = Random(seed!!)
 
         // Prepare player list
         val players = HashMap<Int, ArrayList<Int>>()
@@ -34,16 +35,25 @@ class PageChooser(var playerCount: Int = 0, var pages: Int = 0, var seedString: 
 
         // Choose pages
         var player = 1
-        for (i in 0 until pages) {
+
+        if (!skipIntroPages) {
+            introPages = 0
+        }
+
+        for (i in introPages until pages) {
             var page = 0
             do {
-                page = random.nextInt(pages) + 1
+                page = random.nextInt(pages - introPages) + 1 + introPages
             } while (usedPages.contains(page))
 
             usedPages.add(page)
 
             players[player]!!.add(page)
-            player = incrementPlayer(player, playerCount)
+            player = if (this.random) {
+                incrementPlayerRandom(playerCount)
+            } else {
+                incrementPlayer(player, playerCount)
+            }
         }
 
         result = players
@@ -60,21 +70,7 @@ class PageChooser(var playerCount: Int = 0, var pages: Int = 0, var seedString: 
     }
 
     // in the future we may add support for giving each player a random amount of pages
-    private fun incrementPlayerRandom(current: Int, total: Int): Int {
+    private fun incrementPlayerRandom(total: Int): Int {
         return playerRandom.nextInt(total) + 1
-    }
-
-    fun printResult() {
-        result!!.forEach { (player, pages) -> println("Player $player will receive pages: $pages") }
-    }
-
-    companion object {
-
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val chooser = PageChooser(4, 23, "Hello, world!")
-            val result = chooser.choose()
-            chooser.printResult()
-        }
     }
 }
