@@ -42,6 +42,9 @@ class PageChooser(var playerCount: Int = 0, var pages: Int = 0, var introPages: 
         }
 
         result = players
+
+        result!!.forEach { (index, _) -> result!![index]!!.sort() }
+
         return Collections.unmodifiableMap(players)
     }
 
@@ -57,5 +60,14 @@ class PageChooser(var playerCount: Int = 0, var pages: Int = 0, var introPages: 
     // in the future we may add support for giving each player a random amount of pages
     private fun incrementPlayerRandom(total: Int): Int {
         return playerRandom.nextInt(total) + 1
+    }
+
+    fun validatePlayerCount() {
+        val errorMessage = "You cannot have more players than %s pages"
+        if (skipIntroPages) {
+            require( (pages - introPages) >= playerCount ) { String.format(errorMessage, pages - introPages) }
+        } else {
+            require(pages >= playerCount) { String.format(errorMessage, pages) }
+        }
     }
 }

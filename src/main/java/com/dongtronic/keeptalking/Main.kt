@@ -6,6 +6,8 @@ import com.googlecode.lanterna.gui2.dialogs.MessageDialog
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogButton
 import com.googlecode.lanterna.screen.Screen
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory
+import java.io.File
+import java.io.FileNotFoundException
 
 import java.io.IOException
 import java.util.ArrayList
@@ -20,6 +22,7 @@ object Main {
     private var textGUI: WindowBasedTextGUI? = null
     private var manualPages: TextBox? = null
     private var introPages: TextBox? = null
+    private var manualFileName: TextBox? = null
     private var skipIntroPages: CheckBox? = null
     private var randomPlayers: CheckBox? = null
     private val shortNumberPattern = Pattern.compile("[0-9]{1,2}")
@@ -187,18 +190,32 @@ object Main {
                 customManual()
                 val pageCount = Integer.parseInt(manualPages!!.text)
                 val introPageCount = Integer.parseInt(introPages!!.text)
+                val customFileName = manualFileName!!.text
                 chooser.pages = pageCount
                 chooser.introPages = introPageCount
+                version.filename = customFileName
             }
 
-            val result = chooser.choose()
+            chooser.validatePlayerCount()
 
+            val result = chooser.choose()
             val pages = result[thisPlayer]
 
-            //TODO: Actually generate a PDF
+            if (pages!!.isEmpty()) {
+                MessageDialog.showMessageDialog(textGUI, "Notice",
+                        "No pages were selected for you.\nTry again with fewer players.", MessageDialogButton.OK)
+                return
+            }
+
+            val generatedFile = PdfSplitter.splitFile(version, pages)
+
+            MessageDialog.showMessageDialog(textGUI, "Result", "Your manual has been generated. \n" +
+                    generatedFile.absolutePath)
 
             MessageDialog.showMessageDialog(textGUI, "Result", "You must use pages $pages", MessageDialogButton.OK)
         } catch (ex: IllegalArgumentException) {
+            MessageDialog.showMessageDialog(textGUI, "Error", ex.message, MessageDialogButton.OK)
+        } catch (ex: FileNotFoundException) {
             MessageDialog.showMessageDialog(textGUI, "Error", ex.message, MessageDialogButton.OK)
         }
 
@@ -266,7 +283,27 @@ object Main {
                                 GridLayout.createHorizontallyFilledLayoutData(2)))
 
         /*
-         * Line 7 (Close button)
+         * Line 7 (Filename)
+         */
+
+        contentPanel.addComponent(Label("What is the name of your manual file?"))
+
+        manualFileName = TextBox().setLayoutData(GridLayout.createLayoutData(GridLayout.Alignment.FILL, GridLayout.Alignment.CENTER))
+        contentPanel.addComponent(manualFileName!!)
+
+        contentPanel.addComponent(Label("You must place the file in the same directory as this tool."),
+                GridLayout.createLayoutData(GridLayout.Alignment.FILL, GridLayout.Alignment.CENTER, true, false, 2, 1))
+
+        /*
+         * Line 8 (Empty)
+         */
+        contentPanel.addComponent(
+                EmptySpace()
+                        .setLayoutData(
+                                GridLayout.createHorizontallyFilledLayoutData(2)))
+
+        /*
+         * Line 9 (Close button)
          */
         contentPanel.addComponent(
                 Button("Done", Runnable { window.close() }).setLayoutData(
