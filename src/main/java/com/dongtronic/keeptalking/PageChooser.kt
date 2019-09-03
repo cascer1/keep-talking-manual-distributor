@@ -2,7 +2,7 @@ package com.dongtronic.keeptalking
 
 import java.util.*
 
-class PageChooser(var playerCount: Int, var pages: Int, var seedString: String) {
+class PageChooser(var playerCount: Int = 0, var pages: Int = 0, var seedString: String = "") {
     private var seed: Long? = 0L
     private var result: HashMap<Int, ArrayList<Int>>? = null
     private val playerRandom = Random()
