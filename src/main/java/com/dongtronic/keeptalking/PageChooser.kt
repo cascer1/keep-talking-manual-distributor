@@ -1,31 +1,16 @@
 package com.dongtronic.keeptalking
 
 import java.util.*
+import kotlin.random.Random
 
 class PageChooser(var playerCount: Int = 0, var pages: Int = 0, var introPages: Int = 0, var random: Boolean = false, var skipIntroPages: Boolean = true, var seedString: String = "") {
-    private var seed: Long? = 0L
     private var result: HashMap<Int, ArrayList<Int>>? = null
-    private var playerRandom: Random = Random()
-
-    /**
-     * Turn the seed String into a Long so it can be used in Random object creation
-     */
-    private fun calculateSeed() {
-        var result = 0L
-        val bytes = seedString.toByteArray()
-
-        for (aByte in bytes) {
-            result += aByte.toInt().toLong()
-        }
-
-        this.seed = result
-    }
+    private var playerRandom: Random = Random(0)
 
     fun choose(): Map<Int, ArrayList<Int>> {
         val usedPages = ArrayList<Int>()
-        calculateSeed()
-        val random = Random(seed!!)
-        playerRandom = Random(seed!!)
+        val random = Random(seedString.hashCode())
+        playerRandom = Random(seedString.hashCode())
 
         // Prepare player list
         val players = HashMap<Int, ArrayList<Int>>()
@@ -41,7 +26,7 @@ class PageChooser(var playerCount: Int = 0, var pages: Int = 0, var introPages: 
         }
 
         for (i in introPages until pages) {
-            var page = 0
+            var page: Int
             do {
                 page = random.nextInt(pages - introPages) + 1 + introPages
             } while (usedPages.contains(page))
