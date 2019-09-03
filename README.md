@@ -6,11 +6,23 @@ Obviously, it is infinitely more fun to play the game in person, huddled around 
 However, it's not always possible to gather a group of friends together around a table. 
 For that situation we created this tool.
 
+## How to execute the tool
+
+**You must have Java 11 or newer installed to use this tool.**
+
+To run the tool, simply execute the jar file (`java -jar keeptalking.jar`)  
+**Note:** On Windows, you have to use `javaw` instead: `javaw -jar keeptalking.jar`
+
 ## How to use the tool
 
-1. Think of a fun "password" (this is the seed for the random page selection)
-2. Choose how many players there are
-3. Choose which player you are
-4. Click **Generate**
+1. Enter your password, all players must use the same password
+2. Enter how many players there are
+3. Enter which player you are (to ensure you get your own unique set of pages)
+4. Select your manual version, or enter your own values
+5. Choose whether you want to skip intro pages (otherwise, players might get pages with no useful information on them)
+6. Choose whether you want to randomize the page count per player (this means one player can have more pages than another player)
+7. Click Generate
 
-The tool will generate a PDF file for you which contains all the pages that it chose for you. None of the other players will be able to see these pages.
+The tool will tell you which pages of the manual you should use.
+
+In the future, the tool will generate a PDF file for you which contains only the pages selected for you.
