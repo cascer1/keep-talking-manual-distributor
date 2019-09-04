@@ -1,0 +1,1 @@
+java -jar keeptalking-jar-with-dependencies.jar

@@ -16,5 +16,5 @@ jobs:
     - name: Archive artifacts
       uses: actions/upload-artifact@master
       with:
-        name: keeptalking.jar
-        path: target/keeptalking-jar-with-dependencies.jar
+        name: keeptalking
+        path: release/*
