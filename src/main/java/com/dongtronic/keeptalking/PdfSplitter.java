@@ -2,23 +2,23 @@ package com.dongtronic.keeptalking;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 public class PdfSplitter {
 
     public static File splitFile(ManualVersion version, List<Integer> pageNumbers) throws IOException {
         String fileName = version.getFilename();
-        File file;
+        InputStream in;
 
         if (version != ManualVersion.MANUAL) {
-            file = new File(PdfSplitter.class.getClassLoader().getResource(fileName).getFile());
+            in = PdfSplitter.class.getClassLoader().getResourceAsStream(fileName);
         } else {
-            file = new File(fileName);
+            File file = new File(fileName);
+            in = new FileInputStream(file);
         }
 
-        PDDocument document = PDDocument.load(file);
+        PDDocument document = PDDocument.load(in);
 
         StringBuilder pageNumberString = new StringBuilder();
 

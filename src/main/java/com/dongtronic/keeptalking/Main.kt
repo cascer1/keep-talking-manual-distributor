@@ -6,7 +6,6 @@ import com.googlecode.lanterna.gui2.dialogs.MessageDialog
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogButton
 import com.googlecode.lanterna.screen.Screen
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory
-import java.io.File
 import java.io.FileNotFoundException
 
 import java.io.IOException
@@ -174,6 +173,16 @@ object Main {
         require(thisPlayer <= playerCount) { String.format("You cannot be player %s when there are only %s players.", thisPlayer, playerCount) }
     }
 
+    private fun validateCustom() {
+        require(manualPages!!.text.isNotEmpty()) { "Please enter a page count" }
+
+        if (introPages!!.text.isEmpty()) {
+            introPages!!.text = "0"
+        }
+
+        require(manualFileName!!.text.isNotEmpty()) { "Please enter a filename" }
+    }
+
     private fun generate() {
         try {
             validate()
@@ -188,6 +197,7 @@ object Main {
 
             if (version === ManualVersion.MANUAL) {
                 customManual()
+                validateCustom()
                 val pageCount = Integer.parseInt(manualPages!!.text)
                 val introPageCount = Integer.parseInt(introPages!!.text)
                 val customFileName = manualFileName!!.text

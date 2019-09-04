@@ -23,4 +23,15 @@ To run the tool, simply execute the jar file (`java -jar keeptalking.jar`)
 6. Choose whether you want to randomize the page count per player (this means one player can have more pages than another player)
 7. Click Generate
 
-The tool will generate a PDF file for you in the directory where it is located.
+The tool will generate a PDF file for you in the directory from where you execute it.
+
+## Using custom manuals
+
+The tool supports custom manual files (in PDF format). 
+To use a custom manual, select the `Other` option. 
+After you click the Generate button, the tool will ask you three questions:
+
+1. The amount of pages your file has. This is the total number of pages of the file.
+2. The amount of intro pages your file has. This is the amount of pages at the beginning of the file that don't contain any useful information. (e.g: a title page)
+3. The name of your file. This is the full filename (e.g: `manual.pdf`) of the manual file. It must be located in the directory from where you are running the tool.
+
