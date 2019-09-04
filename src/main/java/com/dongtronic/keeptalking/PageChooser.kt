@@ -14,7 +14,7 @@ class PageChooser(var playerCount: Int = 0, var pages: Int = 0, var introPages: 
 
         // Prepare player list
         val players = HashMap<Int, ArrayList<Int>>()
-        for (i in 1..playerCount) {
+        (1..playerCount).forEach { i ->
             players[i] = ArrayList()
         }
 
@@ -25,7 +25,7 @@ class PageChooser(var playerCount: Int = 0, var pages: Int = 0, var introPages: 
             introPages = 0
         }
 
-        for (i in introPages until pages) {
+        repeat((introPages until pages).count()) {
             var page: Int
             do {
                 page = random.nextInt(pages - introPages) + 1 + introPages

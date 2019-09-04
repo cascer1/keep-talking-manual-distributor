@@ -9,32 +9,32 @@ object PdfSplitter {
     @Throws(IOException::class)
     fun splitFile(version: ManualVersion, pageNumbers: List<Int>): File {
         val fileName = version.filename
-        val inputStream: InputStream?
-
-        inputStream = if (version !== ManualVersion.MANUAL) {
-            PdfSplitter::class.java.classLoader.getResourceAsStream(fileName)
-        } else {
-            val file = File(fileName)
-            FileInputStream(file)
-        }
-
-        val document = PDDocument.load(inputStream)
-
+        val file: File
         val pageNumberString = StringBuilder()
 
-        for (i in document.numberOfPages - 1 downTo 0) {
-            if (!pageNumbers.contains(i + 1)) {
-                document.removePage(i)
-            }
+        file = if (version !== ManualVersion.MANUAL) {
+            File(PdfSplitter::class.java.classLoader.getResource(fileName).file)
+        } else {
+            File(fileName)
         }
 
-        pageNumberString.append("Manual ").append(version.manualName).append(" pages ")
-        pageNumbers.forEach { page -> pageNumberString.append(page).append("-") }
-        var newFileName = pageNumberString.reverse().deleteCharAt(0).reverse().append(".pdf").toString()
-        newFileName = newFileName.replace(" ", "_")
-        document.save(newFileName)
-        document.close()
+        FileInputStream(file).use { fileStream ->
+            var newFileName = ""
+            PDDocument.load(fileStream).use { document ->
 
-        return File(newFileName)
+                (document.numberOfPages - 1 downTo 0).forEach{ page ->
+                    if (!pageNumbers.contains(page + 1)) {
+                        document.removePage(page)
+                    }
+                }
+
+                pageNumberString.append("Manual ").append(version.manualName).append(" pages ")
+                pageNumbers.forEach { page -> pageNumberString.append(page).append("-") }
+                newFileName = pageNumberString.reverse().deleteCharAt(0).reverse().append(".pdf").toString()
+                newFileName = newFileName.replace(" ", "_")
+                document.save(newFileName)
+            }
+            return File(newFileName)
+        }
     }
 }
