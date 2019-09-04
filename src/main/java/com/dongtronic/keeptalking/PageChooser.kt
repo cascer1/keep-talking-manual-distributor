@@ -57,7 +57,6 @@ class PageChooser(var playerCount: Int = 0, var pages: Int = 0, var introPages: 
         return next
     }
 
-    // in the future we may add support for giving each player a random amount of pages
     private fun incrementPlayerRandom(total: Int): Int {
         return playerRandom.nextInt(total) + 1
     }
