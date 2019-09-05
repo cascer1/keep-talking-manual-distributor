@@ -6,6 +6,9 @@ Obviously, it is infinitely more fun to play the game in person, huddled around 
 However, it's not always possible to gather a group of friends together around a table. 
 For that situation we created this tool.
 
+![demo gif](demo.gif)
+
+
 ## How to execute the tool
 
 **You must have Java 11 or newer installed to use this tool.**
