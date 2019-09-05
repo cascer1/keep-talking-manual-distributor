@@ -11,7 +11,7 @@ For that situation we created this tool.
 
 ## How to execute the tool
 
-**You must have Java 11 or newer installed to use this tool.**
+**You must have Java 8 or newer installed to use this tool.**
 
 The simple way of running the tool is to use one of the included scripts. However, you can run the jar file directly if you prefer.
 
