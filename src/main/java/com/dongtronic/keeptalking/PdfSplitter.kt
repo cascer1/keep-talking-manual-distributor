@@ -9,16 +9,15 @@ object PdfSplitter {
     @Throws(IOException::class)
     fun splitFile(version: ManualVersion, pageNumbers: List<Int>): File {
         val fileName = version.filename
-        val file: File
         val pageNumberString = StringBuilder()
 
-        file = if (version !== ManualVersion.MANUAL) {
-            File(PdfSplitter::class.java.classLoader.getResource(fileName).file)
+        val fis = if (version !== ManualVersion.MANUAL) {
+            PdfSplitter::class.java.classLoader.getResourceAsStream(fileName)
         } else {
-            File(fileName)
+            FileInputStream(File(fileName))
         }
 
-        FileInputStream(file).use { fileStream ->
+        fis.use { fileStream ->
             var newFileName = ""
             PDDocument.load(fileStream).use { document ->
 

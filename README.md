@@ -13,10 +13,7 @@ For that situation we created this tool.
 
 **You must have Java 8 or newer installed to use this tool.**
 
-The simple way of running the tool is to use one of the included scripts. However, you can run the jar file directly if you prefer.
-
-To run the tool, simply execute the jar file (`java -jar keeptalking.jar`)  
-**Note:** On Windows, you have to use `javaw` instead: `javaw -jar keeptalking.jar`
+Either double click the jar file, or use one of the included scripts.
 
 ## How to use the tool
 
